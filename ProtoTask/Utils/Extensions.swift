@@ -10,6 +10,30 @@ import UIKit
 
 extension UIView {
     
+    func inputContainerView(image: UIImage, textField: UITextField) -> UIView {
+        let view = UIView()
+        
+        let imageView = UIImageView()
+        imageView.image = image
+        imageView.alpha = 0.87
+        view.addSubview(imageView)
+        imageView.centerY(inView: view)
+        imageView.anchor(left: view.leftAnchor, paddingLeft: 8, width: 24, height: 24)
+        
+        view.addSubview(textField)
+        textField.centerY(inView: view)
+        textField.anchor(left: imageView.rightAnchor,right: view.rightAnchor, paddingLeft: 8)
+        
+        
+        let separatorView = UIView()
+        separatorView.backgroundColor = .lightGray
+        view.addSubview(separatorView)
+        separatorView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor,
+                             right: view.rightAnchor, paddingLeft: 8, height: 0.75)
+        
+        return view
+    }
+    
     
     func anchor(top: NSLayoutYAxisAnchor? = nil,
                 left: NSLayoutXAxisAnchor? = nil,
@@ -52,6 +76,17 @@ extension UIView {
     func centerX(inView view: UIView) {
         translatesAutoresizingMaskIntoConstraints = false
         centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
+    func centerY(inView view: UIView, leftAnchor: NSLayoutXAxisAnchor? = nil,
+                 paddingLeft: CGFloat = 0, constant: CGFloat = 0) {
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: constant).isActive = true
+        
+        if let left = leftAnchor {
+            anchor(left: left, paddingLeft: paddingLeft)
+        }
     }
 }
 

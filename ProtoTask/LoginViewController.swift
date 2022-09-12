@@ -19,6 +19,20 @@ class LoginViewController: UIViewController {
         return label
     }()
     
+    private lazy var emailContainerView: UIView = {
+        let view = UIView().inputContainerView(image: #imageLiteral(resourceName: "ic_mail_outline_white_2x"), textField: emailTextField)
+        view.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        return view
+    }()
+    
+   
+    
+    private let emailTextField: UITextField = {
+        return UITextField().textField(withPlaceholder: "Email",
+                                       isSecureTextEntry: false)
+    }()
+    
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -27,6 +41,7 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .black
         
         addTitleLableToView()
+        addStackOfEmailPasswordContainerAndLoginButtonToView()
         
     }
     
@@ -36,6 +51,18 @@ class LoginViewController: UIViewController {
         view.addSubview(titleLabel)
         titleLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor)
         titleLabel.centerX(inView: view)
+    }
+    
+    func addStackOfEmailPasswordContainerAndLoginButtonToView(){
+        let stack = UIStackView(arrangedSubviews: [emailContainerView])
+        stack.axis = .vertical
+        stack.distribution = .fillEqually
+        stack.spacing = 24
+        
+        view.addSubview(stack)
+        stack.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor,
+                     right: view.rightAnchor, paddingTop: 40, paddingLeft: 16,
+                     paddingRight: 16)
     }
 }
 
