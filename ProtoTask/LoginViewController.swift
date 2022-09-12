@@ -19,17 +19,27 @@ class LoginViewController: UIViewController {
         return label
     }()
     
+    
     private lazy var emailContainerView: UIView = {
         let view = UIView().inputContainerView(image: #imageLiteral(resourceName: "ic_mail_outline_white_2x"), textField: emailTextField)
         view.heightAnchor.constraint(equalToConstant: 50).isActive = true
         return view
     }()
     
-   
-    
     private let emailTextField: UITextField = {
         return UITextField().textField(withPlaceholder: "Email",
                                        isSecureTextEntry: false)
+    }()
+    
+    private lazy var passwordContainerView: UIView = {
+        let view = UIView().inputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
+        view.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        return view
+    }()
+    
+    private let passwordTextField: UITextField = {
+        return UITextField().textField(withPlaceholder: "Password",
+                                       isSecureTextEntry: true)
     }()
     
     
@@ -54,7 +64,7 @@ class LoginViewController: UIViewController {
     }
     
     func addStackOfEmailPasswordContainerAndLoginButtonToView(){
-        let stack = UIStackView(arrangedSubviews: [emailContainerView])
+        let stack = UIStackView(arrangedSubviews: [emailContainerView, passwordContainerView])
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.spacing = 24
