@@ -31,6 +31,8 @@ class LoginViewController: UIViewController {
                                        isSecureTextEntry: false)
     }()
     
+    // ************** password
+    
     private lazy var passwordContainerView: UIView = {
         let view = UIView().inputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
         view.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -43,6 +45,16 @@ class LoginViewController: UIViewController {
     }()
     
     
+    // MARK: - ************** Login Button *************
+    
+    lazy private var loginButton: AuthButton = {
+        let button = AuthButton(type: .system)
+        button.setTitle("Log In", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        button.addTarget(self, action: #selector(loginButtonClicked), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -51,6 +63,7 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .black
         
         addTitleLableToView()
+        
         addStackOfEmailPasswordContainerAndLoginButtonToView()
         
     }
@@ -64,7 +77,9 @@ class LoginViewController: UIViewController {
     }
     
     func addStackOfEmailPasswordContainerAndLoginButtonToView(){
-        let stack = UIStackView(arrangedSubviews: [emailContainerView, passwordContainerView])
+        let stack = UIStackView(arrangedSubviews: [emailContainerView,
+                                                   passwordContainerView,
+                                                   loginButton])
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.spacing = 24
@@ -74,5 +89,39 @@ class LoginViewController: UIViewController {
                      right: view.rightAnchor, paddingTop: 40, paddingLeft: 16,
                      paddingRight: 16)
     }
+    
+    // MARK: - Selectors
+    
+    @objc func loginButtonClicked() {
+        guard let email = emailTextField.text,email.contains("@"),email.contains(".")
+        else {
+            emailTextField.text == "" ? presentAlertController(withTitle: "Email field is empty",
+                                                               message: "Please type your email address!"):
+            presentAlertController(withTitle: "Wrong Email Format",
+                                   message: "Please include an '@' and '.' character!")
+            return
+        }
+
+        let passwordMinimumLength : Int = 6
+        guard let password = passwordTextField.text, password.count >= passwordMinimumLength
+        else {
+            passwordTextField.text == "" ? presentAlertController(withTitle: "Password Field is empty",
+                                                                  message: "Please type in a minimum of 6 characters!") :
+            presentAlertController(withTitle: "Not Enough Characters",
+                                   message: "Please use a minimum of 6 characters!")
+            return
+        }
+        
+        // successful email and password format
+        print("Successl email and password format")
+        print("Email: ", email)
+        print("Password: ", password)
+        
+        // MARK: - TO-DO
+        
+    }
+    
+   
+    
 }
 
