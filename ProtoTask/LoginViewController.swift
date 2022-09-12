@@ -6,10 +6,16 @@
 //
 
 import UIKit
+private let myEmail = "a@gmail.com"
+private let myPassword = "qqqqqq"
 
 class LoginViewController: UIViewController {
     
     // MARK: - Properties
+    
+    var isLoggedIn:Bool = false
+    
+    // MARK: - ************** Title Label *************
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -19,6 +25,7 @@ class LoginViewController: UIViewController {
         return label
     }()
     
+    // MARK: - ************** email *************
     
     private lazy var emailContainerView: UIView = {
         let view = UIView().inputContainerView(image: #imageLiteral(resourceName: "ic_mail_outline_white_2x"), textField: emailTextField)
@@ -31,7 +38,7 @@ class LoginViewController: UIViewController {
                                        isSecureTextEntry: false)
     }()
     
-    // ************** password
+    // MARK: - ************** Password *************
     
     private lazy var passwordContainerView: UIView = {
         let view = UIView().inputContainerView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
@@ -43,7 +50,6 @@ class LoginViewController: UIViewController {
         return UITextField().textField(withPlaceholder: "Password",
                                        isSecureTextEntry: true)
     }()
-    
     
     // MARK: - ************** Login Button *************
     
@@ -65,7 +71,24 @@ class LoginViewController: UIViewController {
         addTitleLableToView()
         
         addStackOfEmailPasswordContainerAndLoginButtonToView()
+    }
+    
+    // MARK: - Selectors
+    
+    @objc func loginButtonClicked() {
         
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        // successful email and password format
+        
+        if email.lowercased() == myEmail && password == myPassword {
+            
+            // Correct email and password entered
+            loginAndMakeHomeVCon_RootVConAndSetItUpAndDismissLoginVC()
+        } else {
+            // wrong email or password
+            presentAlertController(withTitle: "Wrong Email or Password", message: "Please type in a correct Email and  Password!")
+        }
     }
     
     // MARK: - Helper functions
@@ -90,38 +113,20 @@ class LoginViewController: UIViewController {
                      paddingRight: 16)
     }
     
-    // MARK: - Selectors
+    func loginAndMakeHomeVCon_RootVConAndSetItUpAndDismissLoginVC(){
+        print("********** Successful logging in *********")
+        isLoggedIn = true
     
-    @objc func loginButtonClicked() {
-        guard let email = emailTextField.text,email.contains("@"),email.contains(".")
-        else {
-            emailTextField.text == "" ? presentAlertController(withTitle: "Email field is empty",
-                                                               message: "Please type your email address!"):
-            presentAlertController(withTitle: "Wrong Email Format",
-                                   message: "Please include an '@' and '.' character!")
-            return
-        }
-
-        let passwordMinimumLength : Int = 6
-        guard let password = passwordTextField.text, password.count >= passwordMinimumLength
-        else {
-            passwordTextField.text == "" ? presentAlertController(withTitle: "Password Field is empty",
-                                                                  message: "Please type in a minimum of 6 characters!") :
-            presentAlertController(withTitle: "Not Enough Characters",
-                                   message: "Please use a minimum of 6 characters!")
-            return
-        }
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter({$0.activationState == .foregroundActive})
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0}).first?.windows
+            .filter({$0.isKeyWindow}).first
         
-        // successful email and password format
-        print("Successl email and password format")
-        print("Email: ", email)
-        print("Password: ", password)
-        
-        // MARK: - TO-DO
-        
+        guard let homeViewController = keyWindow?.rootViewController as? HomeViewController else { return }
+        homeViewController.callAllUIComponentsToShow()
+        dismiss(animated: true, completion: nil)
     }
-    
-   
     
 }
 
