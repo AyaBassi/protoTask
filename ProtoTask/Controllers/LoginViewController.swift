@@ -15,6 +15,7 @@ class LoginViewController: UIViewController {
     
     var isLoggedIn:Bool = false
     
+    
     // MARK: - ************** Title Label *************
     
     private let titleLabel: UILabel = {

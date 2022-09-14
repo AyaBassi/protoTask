@@ -34,4 +34,3 @@ enum TypeEnum: String, Codable {
     case thumbnail = "thumbnail"
 }
 
-typealias Welcome = [MovieInfos]

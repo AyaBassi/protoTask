@@ -7,14 +7,20 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout{
     
     // MARK: - Properties
+    private let collectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: UICollectionViewFlowLayout()
+    )
     let urlSring = "https://content-cache.watchcorridor.com/v6/interview"
     
     let loginViewController = LoginViewController()
+    var imageUrlArray : [String] = []
 
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,7 +30,6 @@ class HomeViewController: UIViewController {
             // not logged in so present login view controller to login
             presentLogInViewController()
         }
-        
     }
     
     // MARK: - Helper functions
@@ -44,6 +49,10 @@ class HomeViewController: UIViewController {
     // to then make the api calls and set up every thing from here
     func callAllUIComponentsToShow(){
         fetchMovieData()
+        
+        
+        
+        
     }
     
     // MARK: - API CALLS
@@ -52,29 +61,94 @@ class HomeViewController: UIViewController {
             print("Something wrong with url!")
             return
         }
-        let task = URLSession.shared.dataTask(with: url) { jsonData , _ , error in
+        let task = URLSession.shared.dataTask(with: url) { [weak self]jsonData , _ , error in
             guard let jsonData = jsonData , error == nil else {
                 print("No data received, error: ",error!.localizedDescription)
                 return
             }
-                print("got data!")
+                
+            print("got data!")
             
-            let jsonItems = try? JSONDecoder().decode(Welcome.self, from: jsonData)
+            let jsonItems = try? JSONDecoder().decode([MovieInfos].self, from: jsonData)
             
-            guard let jsonItems = jsonItems else {
-                return
+            DispatchQueue.main.async {
+                guard let jsonItems = jsonItems else { return }
+                // now can access moviInformation data
+                
+                for movieInfo in jsonItems {
+                    if let jsonItemsImages = movieInfo.images {
+                        for image in jsonItemsImages {
+                            if image.type == TypeEnum.thumbnail {
+                                self?.imageUrlArray.append(image.url)
+                                break
+                            }
+                        }
+                        
+                    }
+                }
+                self?.collectionView.reloadData()
             }
-            // now can access moviInformation data
-
-
         }
-            task.resume()
+        task.resume()
     }
     
+// MARK: - COLLECTION VIEW
+    
+    func configureCollectionView(){
+        collectionView.register(PhotoCollectionViewCell.self,
+                                forCellWithReuseIdentifier: PhotoCollectionViewCell.identifier)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .black
+        view.addSubview(collectionView)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.frame = view.bounds
+    }
+
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return imageUrlArray.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let imageURLString = imageUrlArray[indexPath.row]
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.identifier, for: indexPath) as? PhotoCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        cell.configure(with: imageURLString)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width:  (view.frame.size.width/2) - 2,
+                      height: (view.frame.size.width/2) - 2)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        print("Selected section \(indexPath.section) and row \(indexPath.row)")
+    }
 }
 
 
-//
+
 //        for jsonItem in jsonItems {
 //            print(jsonItem.id)
 //
