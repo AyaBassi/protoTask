@@ -34,7 +34,7 @@ class LoginViewController: UIViewController {
     }()
     
     private let emailTextField: UITextField = {
-        return UITextField().textField(withPlaceholder: "Email",
+        return UITextField().textField(withPlaceholder: "Email (a@gmail.com)",
                                        isSecureTextEntry: false)
     }()
     
@@ -47,7 +47,7 @@ class LoginViewController: UIViewController {
     }()
     
     private let passwordTextField: UITextField = {
-        return UITextField().textField(withPlaceholder: "Password",
+        return UITextField().textField(withPlaceholder: "Password (qqqqqq)",
                                        isSecureTextEntry: true)
     }()
     
@@ -71,6 +71,9 @@ class LoginViewController: UIViewController {
         addTitleLableToView()
         
         addStackOfEmailPasswordContainerAndLoginButtonToView()
+        
+        // for testing purposes
+        emailTextField.text = "a@gmail.com"
     }
     
     // MARK: - Selectors
