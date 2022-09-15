@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol PhotoCollectionViewCellDelegate {
+    func performImageZoom()
+}
+
 class PhotoCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "PhotoCollectionViewCell"
+    
+    var delegate : PhotoCollectionViewCellDelegate?
     
     private lazy var imageView : UIImageView = {
        let imageView = UIImageView()
@@ -35,6 +41,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         
         contentView.addSubview(imageView)
         
@@ -69,7 +76,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         //        }
         
         if tap.state == UILongPressGestureRecognizer.State.began {
-            print("zoom in")
+            delegate?.performImageZoom()
         }
     }
     

@@ -7,13 +7,17 @@
 
 import UIKit
 
-class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout{
+class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout, PhotoCollectionViewCellDelegate{
+    
+    
     
     // MARK: - Properties
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout()
     )
+    
+    
     let urlSring = "https://content-cache.watchcorridor.com/v6/interview"
     
     let loginViewController = LoginViewController()
@@ -117,6 +121,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.identifier, for: indexPath) as? PhotoCollectionViewCell else {
             return UICollectionViewCell()
         }
+        cell.delegate = self
         
         let (imageURLString,movieDuration) = imageUrlDurationArray[indexPath.row]
         
@@ -148,7 +153,17 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         print("Selected section \(indexPath.section) and row \(indexPath.row)")
     }
+    
+    // MARK: - Image Animation Functions
+    
+    func performImageZoom() {
+
+        
+        
+    }
 }
+
+
 
 
 
