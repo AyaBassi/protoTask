@@ -8,6 +8,7 @@
 import UIKit
 
 class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout, PhotoCollectionViewCellDelegate{
+
     
     // MARK: - Properties
     private let collectionView = UICollectionView(
@@ -18,14 +19,14 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     let urlSring = "https://content-cache.watchcorridor.com/v6/interview"
     
     let loginViewController = LoginViewController()
-    var imageUrlDurationArray : [(url:String,duration:String)] = []
+    var imageUrlDurationArray : [(id:Int,url:String,duration:String,movieDescrib:String)] = []
     var moveiInfos : [MovieInfos] = [] {
         didSet {
             for movieInfo in moveiInfos {
                 if let jsonItemsImages = movieInfo.images {
                     for image in jsonItemsImages {
                         if image.type == TypeEnum.thumbnail {
-                            self.imageUrlDurationArray.append((image.url,movieInfo.duration))
+                            self.imageUrlDurationArray.append((movieInfo.id,image.url,movieInfo.duration,movieInfo.movieDescription))
                             break
                         }
                     }
@@ -120,10 +121,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         }
         cell.delegate = self
         
-        let (imageURLString,movieDuration) = imageUrlDurationArray[indexPath.row]
+        let (id,imageURLString,movieDuration,_) = imageUrlDurationArray[indexPath.row]
         
         cell.fetchImageDataAndAddToImageViewAlsoAddMovieDuration(with: imageURLString, with: movieDuration)
-        
+        cell.imageView.tag = id
+        cell.tag = id
         return cell
     }
     
@@ -148,31 +150,64 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        print("Selected section \(indexPath.section) and row \(indexPath.row)")
+//        if let tag = collectionView.cellForItem(at: indexPath)?.tag {
+//            print(tag)
+//        }
+//
+        print("Selected section \(indexPath.section) and row \(indexPath.row) ")
     }
     
-    // MARK: - Image Animation Functions protocol
+    // MARK: - PhotoCollectionViewCellDelegate Image Animation Functions protocol
     var startingFrame : CGRect?
     var blackBackgroudView : UIView?
+    
+    let photoCollectionViewCell = PhotoCollectionViewCell()
+    
+    func getImagesAndToScreen(with urlString: String, with moviesDuration: String) {
+        print("getImagesAndaddTo screen")
+        
+            guard let url = URL(string: urlString) else {return}
+    
+            URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+                guard let data = data,error == nil else {
+                    return
+                }
+    
+                DispatchQueue.main.async {
+                    let image = UIImage(data: data)
+                    self?.photoCollectionViewCell.imageView.image = image
+    
+                    // just grabing the title label width size and adding 10 pixels to it
+                    self?.photoCollectionViewCell.durationLabel.text = moviesDuration
+                }
+            }.resume()
+    }
     
     let descriptionLabel : UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.text = "2022-09-15 21:18:36.736452+0100 ProtoTask[1644:28661] [boringssl]"
         label.font = UIFont(name: "Avenir-Light", size: 16)
-        label.textColor = UIColor(white: 1, alpha: 0.8)
+        label.textColor = .white
         return label
     }()
     
-    func performImageZoom(startingImageView: UIImageView) {
-
+    func performImageZoomAndShowMovieDescription(startingImageView: UIImageView) {
         startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
         if let startingFrameChecked = startingFrame {
             let zoomingImageView = UIImageView(frame: startingFrameChecked)
+            
             zoomingImageView.image = startingImageView.image
             zoomingImageView.isUserInteractionEnabled = true
             zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
-
+            
+            // find the tag of image long pressed from startignImageView tag that is set right at the beginning and then add the description of the found movie item to description label
+            for moveiInfo in moveiInfos {
+                if moveiInfo.id == startingImageView.tag {
+                    descriptionLabel.text = moveiInfo.movieDescription
+                }
+            }
+            
             if let keyWindow = view.window?.windowScene?.keyWindow {
                 
                 blackBackgroudView = UIView(frame: keyWindow.frame)
@@ -182,6 +217,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                 keyWindow.addSubview(blackBackgroudView!)
                 keyWindow.addSubview(zoomingImageView)
                 blackBackgroudView?.addSubview(descriptionLabel)
+                
                 descriptionLabel.anchor(top: zoomingImageView.bottomAnchor, left: blackBackgroudView?.leftAnchor, right: blackBackgroudView?.rightAnchor, paddingTop: 4, paddingLeft: 4, paddingRight: 4)
                 descriptionLabel.alpha = 0
                 

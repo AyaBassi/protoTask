@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PhotoCollectionViewCellDelegate {
-    func performImageZoom(startingImageView: UIImageView)
+    func performImageZoomAndShowMovieDescription(startingImageView: UIImageView)
 }
 
 class PhotoCollectionViewCell: UICollectionViewCell {
@@ -17,7 +17,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     var delegate : PhotoCollectionViewCellDelegate?
     
-    private lazy var imageView : UIImageView = {
+    lazy var imageView : UIImageView = {
        let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.clipsToBounds = true
@@ -27,7 +27,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
-    let durationLabel: UILabel = {
+    lazy var durationLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = UIColor(white: 0, alpha: 0.7)
         label.textColor = .white
@@ -74,12 +74,11 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         
         if tap.state == UILongPressGestureRecognizer.State.began {
             if let imageView = tap.view as? UIImageView {
-                delegate?.performImageZoom(startingImageView: imageView)
+               
+                delegate?.performImageZoomAndShowMovieDescription(startingImageView: imageView)
             }
         }
     }
-    
-    
     
     func fetchImageDataAndAddToImageViewAlsoAddMovieDuration(with urlString:String,with moviesDuration:String){
         guard let url = URL(string: urlString) else {return}
