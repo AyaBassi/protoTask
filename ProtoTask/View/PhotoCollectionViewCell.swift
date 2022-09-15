@@ -18,10 +18,25 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
+    let durationLabel: UILabel = {
+        let label = UILabel()
+        label.text = "12.00 min"
+        label.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+   }()
+    
+    //lazy var size = imageView.frame.size.width
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         contentView.addSubview(imageView)
+        
+        imageView.addSubview(durationLabel)
+        durationLabel.anchor(bottom: imageView.bottomAnchor, right: imageView.rightAnchor, paddingBottom: 4, paddingRight: 4)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -49,8 +64,12 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             DispatchQueue.main.async {
                 let image = UIImage(data: data)
                 self?.imageView.image = image
+                
+                // just grabing the title label width size and adding 10 pixels to it
+                if let width = self?.durationLabel.bounds.width {
+                    self?.durationLabel.anchor(width: width + 10)
+                }
             }
-
         }.resume()
     }
     

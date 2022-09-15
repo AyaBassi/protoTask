@@ -15,8 +15,7 @@ class LoginViewController: UIViewController {
     
     var isLoggedIn:Bool = false
     
-    
-    // MARK: - ************** Title Label *************
+    // MARK: - ************** Title Label *********
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -52,7 +51,7 @@ class LoginViewController: UIViewController {
                                        isSecureTextEntry: true)
     }()
     
-    // MARK: - ************** Login Button *************
+    // MARK: - ************** Login Button **********
     
     lazy private var loginButton: AuthButton = {
         let button = AuthButton(type: .system)
@@ -73,8 +72,9 @@ class LoginViewController: UIViewController {
         
         addStackOfEmailPasswordContainerAndLoginButtonToView()
         
-        // for testing purposes
+        // to make logging in easy for testing purposes
         emailTextField.text = "a@gmail.com"
+        passwordTextField.text = "qqqqqq"
     }
     
     // MARK: - Selectors

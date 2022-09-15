@@ -48,11 +48,8 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     // When Login button is clicked in LoginViewController,if there is a successful logging in,with correct email and password, login view controller is dismissed and this function is called.Which we will try
     // to then make the api calls and set up every thing from here
     func callAllUIComponentsToShow(){
+        configureCollectionView()
         fetchMovieData()
-        
-        
-        
-        
     }
     
     // MARK: - API CALLS
@@ -61,12 +58,12 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             print("Something wrong with url!")
             return
         }
-        let task = URLSession.shared.dataTask(with: url) { [weak self]jsonData , _ , error in
+        let task = URLSession.shared.dataTask(with: url) { [weak self] jsonData , _ , error in
             guard let jsonData = jsonData , error == nil else {
                 print("No data received, error: ",error!.localizedDescription)
                 return
             }
-                
+            // success
             print("got data!")
             
             let jsonItems = try? JSONDecoder().decode([MovieInfos].self, from: jsonData)
@@ -114,7 +111,9 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let imageURLString = imageUrlArray[indexPath.row]
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.identifier, for: indexPath) as? PhotoCollectionViewCell else {
             return UICollectionViewCell()
         }
