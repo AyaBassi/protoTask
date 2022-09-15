@@ -74,7 +74,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         
         if tap.state == UILongPressGestureRecognizer.State.began {
             if let imageView = tap.view as? UIImageView {
-               
                 delegate?.performImageZoomAndShowMovieDescription(startingImageView: imageView)
             }
         }

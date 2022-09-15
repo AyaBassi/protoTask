@@ -128,6 +128,7 @@ class LoginViewController: UIViewController {
             .filter({$0.isKeyWindow}).first
         
         guard let homeViewController = keyWindow?.rootViewController as? HomeViewController else { return }
+        
         homeViewController.callAllUIComponentsToShow()
         dismiss(animated: true, completion: nil)
     }

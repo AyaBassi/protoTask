@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		639280CD28D3E17B00FF01E7 /* DisplayIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639280CC28D3E17B00FF01E7 /* DisplayIdViewController.swift */; };
 		6394ADE428D267CD002CFCD8 /* MovieInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394ADE328D267CD002CFCD8 /* MovieInfos.swift */; };
 		6394ADE728D27745002CFCD8 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6394ADE628D27745002CFCD8 /* PhotoCollectionViewCell.swift */; };
 		63B56ECD28CFAECA00EDEF0B /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B56ECC28CFAECA00EDEF0B /* HomeViewController.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		639280CC28D3E17B00FF01E7 /* DisplayIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayIdViewController.swift; sourceTree = "<group>"; };
 		6394ADE328D267CD002CFCD8 /* MovieInfos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieInfos.swift; sourceTree = "<group>"; };
 		6394ADE628D27745002CFCD8 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		63B56ECC28CFAECA00EDEF0B /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 			children = (
 				63BB83CB28CF5CAA00855AC7 /* LoginViewController.swift */,
 				63B56ECC28CFAECA00EDEF0B /* HomeViewController.swift */,
+				639280CC28D3E17B00FF01E7 /* DisplayIdViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 			files = (
 				63BB83CC28CF5CAA00855AC7 /* LoginViewController.swift in Sources */,
 				6394ADE728D27745002CFCD8 /* PhotoCollectionViewCell.swift in Sources */,
+				639280CD28D3E17B00FF01E7 /* DisplayIdViewController.swift in Sources */,
 				63BB83FB28CF79CA00855AC7 /* AuthButton.swift in Sources */,
 				63BB83C828CF5CAA00855AC7 /* AppDelegate.swift in Sources */,
 				6394ADE428D267CD002CFCD8 /* MovieInfos.swift in Sources */,

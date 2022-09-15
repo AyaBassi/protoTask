@@ -149,15 +149,12 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        
-//        if let tag = collectionView.cellForItem(at: indexPath)?.tag {
-//            print(tag)
-//        }
-//
+    
+
         print("Selected section \(indexPath.section) and row \(indexPath.row) ")
     }
     
-    // MARK: - PhotoCollectionViewCellDelegate Image Animation Functions protocol
+    // MARK: - PhotoCollectionViewCellDelegate
     var startingFrame : CGRect?
     var blackBackgroudView : UIView?
     
@@ -186,7 +183,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     let descriptionLabel : UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "2022-09-15 21:18:36.736452+0100 ProtoTask[1644:28661] [boringssl]"
+        label.text = "No Description Available"
         label.font = UIFont(name: "Avenir-Light", size: 16)
         label.textColor = .white
         return label
@@ -233,8 +230,9 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                 }, completion:nil)
             }
         }
-
     }
+    
+    // MARK: - Selectors
     
     @objc func handleZoomOut(tapGesture: UITapGestureRecognizer){
         if let zoomOutImageView = tapGesture.view {
@@ -253,17 +251,3 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
 }
-
-
-//        for jsonItem in jsonItems {
-//            print(jsonItem.id)
-//
-//            if let jsonItemImages = jsonItem.images {
-//
-//                for jsonItemImage in jsonItemImages {
-//                    print(jsonItemImage.url)
-//                }
-//            } else {
-//                print("No image")
-//            }
-//        }
