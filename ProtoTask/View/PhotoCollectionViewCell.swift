@@ -25,8 +25,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         let longTap = UILongPressGestureRecognizer(target: self, action: #selector(handleLongTapZoom))
         imageView.addGestureRecognizer(longTap)
         return imageView
-        
-        
     }()
     
     let durationLabel: UILabel = {
@@ -47,7 +45,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         
         imageView.addSubview(durationLabel)
         durationLabel.anchor(bottom: imageView.bottomAnchor, right: imageView.rightAnchor, paddingBottom: 4, paddingRight: 4)
-        
     }
     
     required init?(coder: NSCoder) {
@@ -81,6 +78,8 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    
+    
     
     func fetchImageDataAndAddToImageViewAlsoAddMovieDuration(with urlString:String,with moviesDuration:String){
         guard let url = URL(string: urlString) else {return}

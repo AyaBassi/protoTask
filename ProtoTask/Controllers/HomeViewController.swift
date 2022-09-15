@@ -155,36 +155,46 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     var startingFrame : CGRect?
     var blackBackgroudView : UIView?
     
+    let descriptionLabel : UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.text = "2022-09-15 21:18:36.736452+0100 ProtoTask[1644:28661] [boringssl]"
+        label.font = UIFont(name: "Avenir-Light", size: 16)
+        label.textColor = UIColor(white: 1, alpha: 0.8)
+        return label
+    }()
+    
     func performImageZoom(startingImageView: UIImageView) {
 
         startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
-        if let startingFrame1 = startingFrame {
-            let zoomingImageView = UIImageView(frame: startingFrame1)
+        if let startingFrameChecked = startingFrame {
+            let zoomingImageView = UIImageView(frame: startingFrameChecked)
             zoomingImageView.image = startingImageView.image
             zoomingImageView.isUserInteractionEnabled = true
             zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
 
             if let keyWindow = view.window?.windowScene?.keyWindow {
+                
                 blackBackgroudView = UIView(frame: keyWindow.frame)
                 blackBackgroudView?.backgroundColor = .black
                 blackBackgroudView?.alpha = 0
+                
                 keyWindow.addSubview(blackBackgroudView!)
                 keyWindow.addSubview(zoomingImageView)
+                blackBackgroudView?.addSubview(descriptionLabel)
+                descriptionLabel.anchor(top: zoomingImageView.bottomAnchor, left: blackBackgroudView?.leftAnchor, right: blackBackgroudView?.rightAnchor, paddingTop: 4, paddingLeft: 4, paddingRight: 4)
+                descriptionLabel.alpha = 0
                 
                 UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                     
                     self.blackBackgroudView?.alpha = 1
+                    self.descriptionLabel.alpha = 1
                     let height = self.startingFrame!.height / self.startingFrame!.width * keyWindow.frame.width
                     zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
                 
                     zoomingImageView.center = keyWindow.center
                     
                 }, completion:nil)
-                
-                UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut,
-                               animations: {
-                   
-                }, completion: nil)
             }
         }
 
@@ -196,9 +206,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
                 zoomOutImageView.frame = self.startingFrame!
+                self.descriptionLabel.alpha = 0
                 self.blackBackgroudView?.alpha = 0
             } completion: { _ in
                 zoomOutImageView.removeFromSuperview()
+                self.descriptionLabel.removeFromSuperview()
                 self.blackBackgroudView?.removeFromSuperview()
             }
         }
