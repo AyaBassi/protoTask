@@ -131,6 +131,7 @@ class LoginViewController: UIViewController {
         
         homeViewController.callAllUIComponentsToShow()
         dismiss(animated: true, completion: nil)
+        
     }
     
 }

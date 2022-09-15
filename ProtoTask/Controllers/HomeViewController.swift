@@ -150,8 +150,15 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
     
-
-        print("Selected section \(indexPath.section) and row \(indexPath.row) ")
+        let rootVC = DisplayIdViewController()
+        let navController = UINavigationController(rootViewController: rootVC)
+        navController.modalPresentationStyle = .fullScreen
+        
+        if let id = collectionView.cellForItem(at: indexPath)?.tag{
+            //rootVC.title = "Id Number: \(id)"
+            rootVC.someTitle = "Id Number: \(id)"
+        }
+        present(navController, animated: true)
     }
     
     // MARK: - PhotoCollectionViewCellDelegate

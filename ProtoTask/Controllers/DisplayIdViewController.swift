@@ -9,13 +9,30 @@ import UIKit
 
 class DisplayIdViewController: UIViewController {
     
-    // MARK: - Properties
+    var someTitle : String = "No Id!" {
+        didSet {
+            title = someTitle
+        }
+    }
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .green
+        
+        view.backgroundColor = .black
+        
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Dismiss",
+                                                            style: .plain,
+                                                            target: self,
+                                                            action:#selector(dismissSelf))
+    }
+    
+    // MARK: - Selector
+    @objc func dismissSelf(){
+        dismiss(animated: true,completion: nil)
     }
 
 }
