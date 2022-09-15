@@ -7,16 +7,20 @@
 
 import UIKit
 
-
 class PhotoCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "PhotoCollectionViewCell"
     
-    private let imageView : UIImageView = {
+    private lazy var imageView : UIImageView = {
        let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.clipsToBounds = true
+        imageView.isUserInteractionEnabled = true
+        let longTap = UILongPressGestureRecognizer(target: self, action: #selector(handleLongTapZoom))
+        imageView.addGestureRecognizer(longTap)
         return imageView
+        
+        
     }()
     
     let durationLabel: UILabel = {
@@ -53,10 +57,26 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         imageView.image = nil
     }
     
-    func configure(with urlString:String,with moviesDuration:String){
+    @objc func handleLongTapZoom(tap : UILongPressGestureRecognizer){
+        // just in case more action is requred
+        //        switch tap.state {
+        //        case UILongPressGestureRecognizer.State.began:
+        //
+        //        case UILongPressGestureRecognizer.State.ended:
+        //            break
+        //        default:
+        //            break
+        //        }
+        
+        if tap.state == UILongPressGestureRecognizer.State.began {
+            print("zoom in")
+        }
+    }
+    
+    func fetchImageDataAndAddToImageViewAlsoAddMovieDuration(with urlString:String,with moviesDuration:String){
         guard let url = URL(string: urlString) else {return}
 
-        URLSession.shared.dataTask(with: url) { [weak self]data, _, error in
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
             guard let data = data,error == nil else {
                 return
             }

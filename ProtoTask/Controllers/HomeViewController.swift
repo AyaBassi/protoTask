@@ -120,8 +120,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         let (imageURLString,movieDuration) = imageUrlDurationArray[indexPath.row]
         
-        
-        cell.configure(with: imageURLString, with: movieDuration)
+        cell.fetchImageDataAndAddToImageViewAlsoAddMovieDuration(with: imageURLString, with: movieDuration)
         
         return cell
     }
