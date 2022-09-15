@@ -9,14 +9,11 @@ import UIKit
 
 class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource , UICollectionViewDelegateFlowLayout, PhotoCollectionViewCellDelegate{
     
-    
-    
     // MARK: - Properties
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout()
     )
-    
     
     let urlSring = "https://content-cache.watchcorridor.com/v6/interview"
     
@@ -154,17 +151,60 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         print("Selected section \(indexPath.section) and row \(indexPath.row)")
     }
     
-    // MARK: - Image Animation Functions
+    // MARK: - Image Animation Functions protocol
+    var startingFrame : CGRect?
+    var blackBackgroudView : UIView?
     
-    func performImageZoom() {
+    func performImageZoom(startingImageView: UIImageView) {
 
-        
-        
+        startingFrame = startingImageView.superview?.convert(startingImageView.frame, to: nil)
+        if let startingFrame1 = startingFrame {
+            let zoomingImageView = UIImageView(frame: startingFrame1)
+            zoomingImageView.image = startingImageView.image
+            zoomingImageView.isUserInteractionEnabled = true
+            zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
+
+            if let keyWindow = view.window?.windowScene?.keyWindow {
+                blackBackgroudView = UIView(frame: keyWindow.frame)
+                blackBackgroudView?.backgroundColor = .black
+                blackBackgroudView?.alpha = 0
+                keyWindow.addSubview(blackBackgroudView!)
+                keyWindow.addSubview(zoomingImageView)
+                
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                    
+                    self.blackBackgroudView?.alpha = 1
+                    let height = self.startingFrame!.height / self.startingFrame!.width * keyWindow.frame.width
+                    zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+                
+                    zoomingImageView.center = keyWindow.center
+                    
+                }, completion:nil)
+                
+                UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut,
+                               animations: {
+                   
+                }, completion: nil)
+            }
+        }
+
     }
+    
+    @objc func handleZoomOut(tapGesture: UITapGestureRecognizer){
+        if let zoomOutImageView = tapGesture.view {
+            // need to anmage back out to controller
+            
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+                zoomOutImageView.frame = self.startingFrame!
+                self.blackBackgroudView?.alpha = 0
+            } completion: { _ in
+                zoomOutImageView.removeFromSuperview()
+                self.blackBackgroudView?.removeFromSuperview()
+            }
+        }
+    }
+    
 }
-
-
-
 
 
 //        for jsonItem in jsonItems {

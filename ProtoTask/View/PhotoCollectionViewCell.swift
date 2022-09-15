@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PhotoCollectionViewCellDelegate {
-    func performImageZoom()
+    func performImageZoom(startingImageView: UIImageView)
 }
 
 class PhotoCollectionViewCell: UICollectionViewCell {
@@ -76,7 +76,9 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         //        }
         
         if tap.state == UILongPressGestureRecognizer.State.began {
-            delegate?.performImageZoom()
+            if let imageView = tap.view as? UIImageView {
+                delegate?.performImageZoom(startingImageView: imageView)
+            }
         }
     }
     
