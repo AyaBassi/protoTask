@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 class PhotoCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "PhotoCollectionViewCell"
@@ -20,7 +21,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     let durationLabel: UILabel = {
         let label = UILabel()
-        label.text = "12.00 min"
         label.backgroundColor = UIColor(white: 0, alpha: 0.7)
         label.textColor = .white
         label.textAlignment = .center
@@ -53,7 +53,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         imageView.image = nil
     }
     
-    func configure(with urlString:String){
+    func configure(with urlString:String,with moviesDuration:String){
         guard let url = URL(string: urlString) else {return}
 
         URLSession.shared.dataTask(with: url) { [weak self]data, _, error in
@@ -66,9 +66,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 self?.imageView.image = image
                 
                 // just grabing the title label width size and adding 10 pixels to it
-                if let width = self?.durationLabel.bounds.width {
-                    self?.durationLabel.anchor(width: width + 10)
-                }
+                self?.durationLabel.text = moviesDuration
             }
         }.resume()
     }

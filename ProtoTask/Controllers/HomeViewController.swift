@@ -17,7 +17,22 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     let urlSring = "https://content-cache.watchcorridor.com/v6/interview"
     
     let loginViewController = LoginViewController()
-    var imageUrlArray : [String] = []
+    var imageUrlDurationArray : [(url:String,duration:String)] = []
+    var moveiInfos : [MovieInfos] = [] {
+        didSet {
+            for movieInfo in moveiInfos {
+                if let jsonItemsImages = movieInfo.images {
+                    for image in jsonItemsImages {
+                        if image.type == TypeEnum.thumbnail {
+                            self.imageUrlDurationArray.append((image.url,movieInfo.duration))
+                            break
+                        }
+                    }
+                }
+            }
+            self.collectionView.reloadData()
+        }
+    }
 
     // MARK: - Lifecycle
     
@@ -67,23 +82,10 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             print("got data!")
             
             let jsonItems = try? JSONDecoder().decode([MovieInfos].self, from: jsonData)
-            
             DispatchQueue.main.async {
                 guard let jsonItems = jsonItems else { return }
                 // now can access moviInformation data
-                
-                for movieInfo in jsonItems {
-                    if let jsonItemsImages = movieInfo.images {
-                        for image in jsonItemsImages {
-                            if image.type == TypeEnum.thumbnail {
-                                self?.imageUrlArray.append(image.url)
-                                break
-                            }
-                        }
-                        
-                    }
-                }
-                self?.collectionView.reloadData()
+                self?.moveiInfos = jsonItems
             }
         }
         task.resume()
@@ -107,17 +109,20 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
 
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageUrlArray.count
+        return imageUrlDurationArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let imageURLString = imageUrlArray[indexPath.row]
-        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.identifier, for: indexPath) as? PhotoCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configure(with: imageURLString)
+        
+        let (imageURLString,movieDuration) = imageUrlDurationArray[indexPath.row]
+        
+        
+        cell.configure(with: imageURLString, with: movieDuration)
+        
         return cell
     }
     
